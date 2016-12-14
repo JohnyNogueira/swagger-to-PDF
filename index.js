@@ -3,7 +3,7 @@
 
 var
     fs = require('fs'),
-    pdf = require('phantomjs-pdf');
+    pdf = require('phantom-html2pdf');
 
    
 // consts
@@ -75,10 +75,16 @@ function writeOutFiles(htmlInput,fileName)
         else{
             console.log("done");
             //normalize.css helps with empty pages on the end of the pdf and renders the html more consistently # http://necolas.github.io/normalize.css/
-            pdf.convert({"html" : "./test.html", "css": "./normalize.css"}, function(result) {
-                if(result._err)    
-                    console.log("err:" + result._err);
-				else{
+            var options = {
+                "html" : "./test.html",
+                "css": "./normalize.css",
+                "paperSize": {format: 'A4', orientation: 'portrait', border: '1cm'}
+            };
+            pdf.convert(options, function(err, result) {
+                if(result._err) {  
+                  //  console.log(err);
+                    console.log("err1:" + result._err);
+                } else{
 
 					/* Using a buffer and callback */
 					result.toBuffer(function(returnedBuffer) {
